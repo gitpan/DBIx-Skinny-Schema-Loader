@@ -15,6 +15,7 @@ inc/Test/Base.pm
 inc/Test/Base/Filter.pm
 inc/Test/Builder.pm
 inc/Test/Builder/Module.pm
+inc/Test/Exception.pm
 inc/Test/More.pm
 lib/DBIx/Skinny/Schema/Loader.pm
 lib/DBIx/Skinny/Schema/Loader/DBI.pm

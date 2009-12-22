@@ -4,6 +4,7 @@ author:
   - 'Ryo Miyake <ryo.studiom {at} gmail.com>'
 build_requires:
   ExtUtils::MakeMaker: 6.42
+  Test::Exception: 0
   Test::More: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.42
@@ -20,11 +21,9 @@ no_index:
     - t
     - xt
 requires:
-  DBI: 0
-  DBIx::Skinny: 0
-  DBIx::Skinny::Schema: 0
+  DBIx::Skinny: 0.05
   Exporter: 0
   Filter::Util::Call: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.08
+version: 0.09
