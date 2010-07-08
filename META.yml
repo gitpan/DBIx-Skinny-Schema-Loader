@@ -23,9 +23,9 @@ no_index:
     - xt
 requires:
   DBD::SQLite: 0
-  DBIx::Skinny: 0.0704
+  DBIx::Skinny: 0.0714
   Exporter: 0
   Filter::Util::Call: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.12
+version: 0.13

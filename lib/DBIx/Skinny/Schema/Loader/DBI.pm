@@ -12,8 +12,8 @@ sub new {
         croak "$_ is required" unless defined $fields->{ $_ }
     }
 
-    my $self = bless {%$fields}, $class;
-    $self->{ dbh } = DBI->connect($self->{ dsn }, $self->{ user }, $self->{ pass });
+    my $self = bless {connect_options => {}, %$fields}, $class;
+    $self->{ dbh } = DBI->connect($self->{ dsn }, $self->{ user }, $self->{ pass }, $self->{connect_options});
     return $self;
 }
 
@@ -40,11 +40,12 @@ sub table_pk {
     my ($self, $table) = @_;
     my @keys = $self->{ dbh }->primary_key(undef, undef, $table);
     if ( @keys ) {
-        return $#keys ? '' : $keys[0];
+        return \@keys;
+        # return $#keys ? '' : $keys[0];
     }
     my $columns = $self->table_columns($table);
-    return $columns->[0] if scalar @$columns == 1;
-    return 'id' if ( grep { $_ eq 'id' } @$columns );
+    return [$columns->[0]] if scalar @$columns == 1;
+    return ['id'] if ( grep { $_ eq 'id' } @$columns );
     croak "Could not find primary key of $table";
 }
 
