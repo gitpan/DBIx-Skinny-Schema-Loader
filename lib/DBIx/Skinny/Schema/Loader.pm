@@ -2,7 +2,7 @@ package DBIx::Skinny::Schema::Loader;
 use strict;
 use warnings;
 
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 use Carp;
 use DBI;
@@ -38,20 +38,32 @@ sub supported_drivers {
 }
 
 sub connect {
-    my ($self, $dsn, $user, $pass, $connect_options) = @_;
-    $dsn =~ /^dbi:([^:]+):/;
+    my $self = shift;
+    my $opts;
+    if (@_ == 1) {
+        $opts = +{
+            dsn             => $_[0]->{dsn}             || '',
+            user            => $_[0]->{username}        || '',
+            pass            => $_[0]->{password}        || '',
+            connect_options => $_[0]->{connect_options} || {},
+        };
+    } else {
+        my ($dsn, $user, $pass, $connect_options) = @_;
+        $opts = {
+            dsn             => $dsn             || '',
+            user            => $user            || '',
+            pass            => $pass            || '',
+            connect_options => $connect_options || {},
+        };
+    }
+    $opts->{dsn} =~ /^dbi:([^:]+):/;
     my $driver = $1 or croak "Could not parse DSN";
     croak "$driver is not supported by DBIx::Skinny::Schema::Loader yet"
         unless grep { /^$driver$/ } $self->supported_drivers;
     my $impl = __PACKAGE__ . "::DBI::$driver";
     eval "use $impl"; ## no critic
     die $@ if $@;
-    $self->{ impl } = $impl->new({
-        dsn  => $dsn  || '',
-        user => $user || '',
-        pass => $pass || '',
-        connect_options => $connect_options || {},
-    });
+    $self->{ impl } = $impl->new($opts);
 }
 
 sub load_schema {
@@ -87,7 +99,7 @@ sub make_schema_at {
     my ($schema_class, $options, $connect_info) = @_;
 
     my $self = __PACKAGE__->new;
-    $self->connect(@{ $connect_info });
+    $self->connect(ref $connect_info eq 'HASH' ? $connect_info : @{ $connect_info });
 
     my $schema = "package $schema_class;\nuse DBIx::Skinny::Schema;\n\n";
     $schema .= $self->_insert_template($options->{ before_template });
@@ -138,7 +150,7 @@ DBIx::Skinny::Schema::Loader - Schema loader for DBIx::Skinny
 
 =head1 SYNOPSIS
 
-Runtime schema loading:
+Run-time schema loading:
 
   package Your::DB::Schema;
   use base qw/DBIx::Skinny::Schema::Loader/;
@@ -169,7 +181,7 @@ to create a static schema class.
 =head1 DESCRIPTION
 
 DBIx::Skinny::Schema::Loader is schema loader for DBIx::Skinny.
-It can dynamically load schemas at runtime or statically publish
+It can dynamically load schema at run-time or statically publish
 them.
 
 It supports MySQL and SQLite, and PostgreSQL.
@@ -177,6 +189,8 @@ It supports MySQL and SQLite, and PostgreSQL.
 =head1 METHODS
 
 =head2 connect( $dsn, $user, $pass, $connect_options )
+
+=head2 connect( { dsn => ..., username => ..., password => ..., connect_options => ... } )
 
 Probably no need for public use.
 
@@ -221,8 +235,7 @@ C<$schema_class> is schema class name that you want publish.
 
 C<$options> are described in the C<options of make_schema_at> section.
 
-C<$connect_info> is an arrayref of dsn, username, password to connect to the
-database.
+C<$connect_info> is ArrayRef or HashRef. If it is an arrayref, it contains dsn, username, password to connect to the database. If it is an hashref, it contains same parameters as DBIx::Skinny->new(\%opts).
 
 =head1 HOW LOADER FINDS PRIMARY KEYS
 
