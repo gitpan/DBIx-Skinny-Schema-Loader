@@ -2,7 +2,7 @@ package DBIx::Skinny::Schema::Loader;
 use strict;
 use warnings;
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 use Carp;
 use DBI;
@@ -129,11 +129,11 @@ sub _make_install_table_text {
     my $table   = $params->{ table };
     my $pk      = join " ", @{ $params->{ pk    }   };
     my $columns = join " ", @{ $params->{ columns } };
-    $template ||=
-           "install_table [% table %] => schema {\n".
-           "    pk qw/[% pk %]/;\n".
-           "    columns qw/[% columns %]/;\n".
-           "};\n\n";
+    unless ($template) {
+        $template  = "install_table [% table %] => schema {\n";
+        $template .= "    pk qw/[% pk %]/;\n" if $pk;
+        $template .= "    columns qw/[% columns %]/;\n};\n\n";
+    }
 
     $template =~ s/\[% table %\]/$table/g;
     $template =~ s/\[% pk %\]/$pk/g;
@@ -244,8 +244,6 @@ surely primary key defined at DB, use it as PK.
 in case of primary key is not defined at DB, Loader find PK following logic.
 1. if table has only one column, use it
 2. if table has column 'id', use it
-
-unless found PK yet, Loader throws exception.
 
 =head1 ADDITIONAL SETTINGS FOR load_schema
 

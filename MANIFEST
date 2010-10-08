@@ -40,7 +40,6 @@ t/202_load_schema_with_additional_settings.t
 t/203_load_schema_without_skinny_setup.t
 t/300_make_schema_at.t
 t/301_make_schema_at_options.t
-t/302_make_schema_at_composite_pk.t
 t/Mock/Additional.pm
 t/Mock/Additional/Schema.pm
 t/Mock/Composite.pm

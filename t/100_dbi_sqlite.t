@@ -23,22 +23,6 @@ throws_ok { DBIx::Skinny::Schema::Loader::DBI::SQLite->new({ dsn => '', user => 
     qr/^Can't connect to data source/,
     'failed to connect DB';
 
-$dbh->do($_) for (
-    qq{
-        CREATE TABLE composite (
-            id   int,
-            name text,
-            primary key (id, name)
-        )
-    },
-    qq{
-        CREATE TABLE no_pk (
-            code int,
-            name text
-        )
-    }
-);
-
 ok my $loader = DBIx::Skinny::Schema::Loader::DBI::SQLite->new({
         dsn => $testdsn, user => $testuser, pass => $testpass
     }), 'created loader impl object';
@@ -51,15 +35,8 @@ is_deeply $loader->table_pk('books'), ['id'], 'books pk';
 is_deeply $loader->table_pk('genders'), ['name'], 'genders pk';
 is_deeply $loader->table_pk('prefectures'), ['name'], 'prefectures pk';
 
-is_deeply $loader->table_pk('composite'), [qw/id name/], 'skip composite pk';
-throws_ok { $loader->table_pk('no_pk') }
-    qr/^Could not find primary key/,
-    'caught exception pk not found';
-
-$dbh->do($_) for (
-    q{ DROP TABLE composite },
-    q{ DROP TABLE no_pk },
-);
+is_deeply [sort @{$loader->table_pk('composite')}], [qw/id name/], 'composite pk';
+is_deeply $loader->table_pk('no_pk'), [], 'no primary key';
 
 my $schema = DBIx::Skinny::Schema::Loader->new;
 ok $schema->connect($testdsn, $testuser, $testpass), 'connected loader';
