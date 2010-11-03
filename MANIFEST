@@ -1,5 +1,6 @@
 Changes
 inc/Class/Data/Inheritable.pm
+inc/DBD/SQLite.pm
 inc/Module/Install.pm
 inc/Module/Install/AuthorTests.pm
 inc/Module/Install/Base.pm
@@ -31,9 +32,11 @@ README
 t/000_compile.t
 t/001_connect.t
 t/002_get_skinny_connect_info.t
+t/003_connect_again.t
 t/100_dbi_sqlite.t
 t/101_dbi_mysql.t
 t/102_dbi_pg.t
+t/103_dbi_pg_with_schema.t
 t/200_load_schema.t
 t/201_load_schema_within_db_class.t
 t/202_load_schema_with_additional_settings.t
@@ -50,6 +53,7 @@ t/Mock/MySQL.pm
 t/Mock/MySQLDummy.pm
 t/Mock/NoSetup.pm
 t/Mock/Pg.pm
+t/Mock/Pg/Schema.pm
 t/Mock/SQLite.pm
 xt/01_podspell.t
 xt/02_perlcritic.t
