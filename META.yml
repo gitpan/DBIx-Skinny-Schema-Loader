@@ -19,9 +19,9 @@ no_index:
     - t
     - xt
 requires:
-  DBIx::Skinny: 0.0714
+  DBIx::Skinny: 0.0728
   Exporter: 0
   Filter::Util::Call: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.17
+version: 0.18
