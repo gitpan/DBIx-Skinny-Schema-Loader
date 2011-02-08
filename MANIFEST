@@ -31,6 +31,7 @@ t/200_load_schema.t
 t/201_load_schema_within_db_class.t
 t/202_load_schema_with_additional_settings.t
 t/203_load_schema_without_skinny_setup.t
+t/204_load_schema_uc_pk.t
 t/300_make_schema_at.t
 t/301_make_schema_at_options.t
 t/310_make_schema_ignore_table.t
@@ -40,11 +41,13 @@ t/Mock/Composite.pm
 t/Mock/DB.pm
 t/Mock/DB/Schema.pm
 t/Mock/MySQL.pm
+t/Mock/MySQL/UcPk.pm
 t/Mock/MySQLDummy.pm
 t/Mock/NoSetup.pm
 t/Mock/Pg.pm
 t/Mock/Pg/Schema.pm
 t/Mock/SQLite.pm
+t/Mock/SQLite/UcPk.pm
 xt/01_podspell.t
 xt/02_perlcritic.t
 xt/03_pod.t

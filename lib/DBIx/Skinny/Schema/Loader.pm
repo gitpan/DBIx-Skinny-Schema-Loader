@@ -2,7 +2,7 @@ package DBIx::Skinny::Schema::Loader;
 use strict;
 use warnings;
 
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 
 use Carp;
 use DBI;
@@ -84,6 +84,7 @@ sub load_schema {
         my $pk = $self->{ impl }->table_pk($table);
         $schema->{ $table }->{ pk } = $pk if $pk;
         $schema->{ $table }->{ columns } = $self->{ impl }->table_columns($table);
+        $schema->{ $table }->{ row_class } = DBIx::Skinny::Util::mk_row_class($class, $table);
     }
     return $self;
 }
