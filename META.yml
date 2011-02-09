@@ -27,4 +27,4 @@ requires:
   Exporter: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.21
+version: 0.22
