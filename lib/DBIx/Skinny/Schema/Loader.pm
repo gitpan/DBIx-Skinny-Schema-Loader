@@ -2,7 +2,7 @@ package DBIx::Skinny::Schema::Loader;
 use strict;
 use warnings;
 
-our $VERSION = '0.22';
+our $VERSION = '0.24';
 
 use Carp;
 use DBI;
@@ -58,7 +58,7 @@ sub connect {
             connect_options => $connect_options || {},
         };
     }
-    $opts->{dsn} =~ /^dbi:([^:]+):/;
+    $opts->{dsn} =~ /^dbi:([^:]+):/i;
     my $driver = $1 or croak "Could not parse DSN";
     croak "$driver is not supported by DBIx::Skinny::Schema::Loader yet"
         unless grep { /^$driver$/ } $self->supported_drivers;
@@ -107,14 +107,19 @@ sub make_schema_at {
 
     $schema .= $self->_insert_template($options->{ before_template });
     $schema .= $self->_insert_template($options->{ template });
-    $schema .= $self->_make_install_table_text(
-        {
-            table   => $_,
-            pk      => $self->{ impl }->table_pk($_),
-            columns => $self->{ impl }->table_columns($_),
-        },
-        $options->{ table_template }
-    ) for @{ $self->_get_tables($options->{ ignore_rules }) };
+
+    for my $table ( @{ $self->_get_tables($options->{ ignore_rules }) } ) {
+        my $pk = $self->{ impl }->table_pk($table);
+        $schema .= $self->_make_install_table_text(
+            {
+                table   => $table,
+                pk      => ref $pk ? $pk : [ $pk ],
+                columns => $self->{ impl }->table_columns($table),
+            },
+            $options->{ table_template }
+        );
+    }
+
     $schema .= $self->_insert_template($options->{ after_template });
 
     $schema .= "1;";

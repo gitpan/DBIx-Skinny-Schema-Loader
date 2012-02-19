@@ -35,8 +35,10 @@ t/204_load_schema_uc_pk.t
 t/300_make_schema_at.t
 t/301_make_schema_at_options.t
 t/310_make_schema_ignore_table.t
+t/400_comparison.t
 t/Mock/Additional.pm
 t/Mock/Additional/Schema.pm
+t/Mock/Comparison.pm
 t/Mock/Composite.pm
 t/Mock/DB.pm
 t/Mock/DB/Schema.pm
